@@ -1,5 +1,7 @@
 lib/Net/Random.pm
-t/all.t
+t/param-checking.t
+t/live-tests.t
+t/fake-tests.t
 CHANGES
 README
 MANIFEST

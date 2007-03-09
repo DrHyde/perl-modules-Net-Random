@@ -1,10 +1,11 @@
+# $Id: Random.pm,v 1.2 2007/03/09 17:27:26 drhyde Exp $
 package Net::Random;
 
 use strict;
 local $^W = 1;
 use vars qw($VERSION);
 
-$VERSION = '1.4';
+$VERSION = '1.5';
 
 require LWP::UserAgent;
 use Sys::Hostname;
