@@ -1,0 +1,7 @@
+lib/Net/Random.pm
+t/all.t
+CHANGES
+README
+MANIFEST
+Makefile.PL
+META.yml                                 Module meta-data (added by MakeMaker)
