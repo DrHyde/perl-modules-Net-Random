@@ -9,8 +9,9 @@ interested in patches to the test suite.
 
 Because we're testing against data sources out of our control, these may
 sometimes refuse to give us any data.  In that case, the test suite will
-spit warnings as well as fail the tests.  The remedy is to wait until later
-and try again.
+skip some of the live tests.  If, however, they're giving us data, then
+some of the live tests may *fail*.  Testing with random data is HARD.
+Please try again.
 
 To install, do the usual:
 	perl Makefile.PL
