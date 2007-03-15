@@ -7,3 +7,7 @@ README
 MANIFEST
 Makefile.PL
 META.yml                                 Module meta-data (added by MakeMaker)
+fourmilab-data
+fourmilab-outofdata
+random.org-checkbuf
+random.org-data
