@@ -1,9 +1,15 @@
-# $Id: live-tests.t,v 1.1 2007/03/09 17:27:27 drhyde Exp $
+# $Id: live-tests.t,v 1.2 2007/03/16 15:34:35 drhyde Exp $
 use strict;
-local $^W = 0;
 
 my $warning;
-$SIG{__WARN__} = sub { $warning = join('', @_) };
+BEGIN {
+    $^W=1;
+    $SIG{__WARN__} = sub {
+        $warning = join('', @_);
+        die("Caught a warning, making it fatal:\n$warning\n")
+            if($warning !~ /^Net::Random: /);
+    };
+}
 
 use Test::More tests => 12;
 use Net::Random;
