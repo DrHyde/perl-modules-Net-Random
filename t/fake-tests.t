@@ -1,4 +1,4 @@
-# $Id: fake-tests.t,v 1.3 2007/03/16 15:34:35 drhyde Exp $
+# $Id: fake-tests.t,v 1.4 2007/03/20 16:27:25 drhyde Exp $
 use strict;
 
 my $warning;
@@ -79,4 +79,54 @@ is_deeply(
 );
 
 # from now on we use fourmilab.ch
-$rand = Net::Random->new(src => 'fourmilab.ch');
+$rand = Net::Random->new(src => 'fourmilab.ch', min => 300, max => 555);
+open(FILE, 't/fourmilab-data') || die("Can't open t/fourmilab-data\n");
+$warning = ''; @statuses = (1); @content = (join('', <FILE>));
+close(FILE);
+is_deeply(
+    [$rand->get(16)], # 16 bytes
+    [map { 300 + hex } qw(37 53 04 13 AF 32 91 E4 CF D0 36 8E 6A C7 D0 19)],
+    "complete one byte numbers (ie working on byte boundaries) with offset"
+);
+
+$rand = Net::Random->new(src => 'fourmilab.ch', max => 65535);
+is_deeply(
+    [$rand->get(5)], # 10 bytes
+    [map { hex } qw(F6E5 6744 1117 ADDB 5531)],
+    "complete two byte numbers without offset"
+);
+
+$rand = Net::Random->new(src => 'fourmilab.ch', min => 5, max => 65540);
+is_deeply(
+    [$rand->get(3)], # 6 bytes
+    [map { 5 + hex } qw(6C95 4422 20D1)],
+    "complete two byte numbers with offset"
+);
+
+$rand = Net::Random->new(src => 'fourmilab.ch', max => 16777215);
+is_deeply(
+    [$rand->get(4)], # 12 bytes
+    [map { hex } qw(0A9E4A CFE035 6143F0 A8812F)],
+    "complete three byte numbers without offset"
+);
+
+$rand = Net::Random->new(src => 'fourmilab.ch', min => -2, max => 16777213);
+is_deeply(
+    [$rand->get(4)], # 12 bytes
+    [map { -2 + hex } qw(9B08CF 1434D4 DF9194 911823)],
+    "complete three byte numbers with -ve offset"
+);
+
+$rand = Net::Random->new(src => 'fourmilab.ch', min => 0, max => 4294967295);
+is_deeply(
+    [$rand->get(1)], # 4 bytes
+    [hex("F05E6AE3")],
+    "complete four byte numbers without offset"
+);
+
+$rand = Net::Random->new(src => 'fourmilab.ch', min => -100, max => 4294967195);
+is_deeply(
+    [$rand->get(1)], # 4 bytes
+    [hex("0984D65E") -100],
+    "complete four byte numbers with offset"
+);

@@ -1,4 +1,4 @@
-# $Id: Random.pm,v 1.2 2007/03/09 17:27:26 drhyde Exp $
+# $Id: Random.pm,v 1.3 2007/03/20 16:27:25 drhyde Exp $
 package Net::Random;
 
 use strict;
@@ -9,6 +9,8 @@ $VERSION = '1.5';
 
 require LWP::UserAgent;
 use Sys::Hostname;
+
+use Data::Dumper;
 
 my $ua = LWP::UserAgent->new(
     agent   => 'perl-Net-Random/'.$VERSION,
@@ -117,7 +119,7 @@ The constructor returns a Net::Random object.  It takes named parameters,
 of which one - 'src' - is compulsory, telling the module where to get its
 random data from.  The 'min' and 'max' parameters are optional, and default
 to 0 and 255 respectively.  Both must be integers, and 'max' must be at
-least min+1.  The minimum value of 'min' is 0.  The maximum value of 'max'
+least min+1.  The maximum value of 'max'
 is 2^32-1, the largest value that can be stored in a 32-bit int, or
 0xFFFFFFFF.
 
@@ -132,15 +134,15 @@ sub new {
     exists($params{min}) or $params{min} = 0;
     exists($params{max}) or $params{max} = 255;
 
-    die("Bad parameters to Net::Random->new()") if(
+    die("Bad parameters to Net::Random->new():\n".Dumper(\@_)) if(
         (grep {
             $_ !~ /^(src|min|max)$/
         } keys %params) ||
 	!exists($params{src}) ||
 	$params{src} !~ /^(fourmilab\.ch|random\.org)$/ ||
-	$params{min} =~ /\D/ ||
-	$params{max} =~ /\D/ ||
-	$params{min} < 0 ||
+	$params{min} !~ /^-?\d+$/ ||
+	$params{max} !~ /^-?\d+$/ ||
+	# $params{min} < 0 ||
 	$params{max} > 2 ** 32 - 1 ||
 	$params{min} >= $params{max}
     );
