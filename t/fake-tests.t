@@ -1,4 +1,4 @@
-# $Id: fake-tests.t,v 1.5 2007/03/21 15:56:41 drhyde Exp $
+# $Id: fake-tests.t,v 1.6 2007/03/21 17:18:31 drhyde Exp $
 use strict;
 
 my $warning;
@@ -150,3 +150,11 @@ is_deeply(
 );
 # there are now 1019 bytes in the pool - the first five from the file have
 # been used
+$rand = Net::Random->new(src => 'fourmilab.ch', min => 0, max => 127);
+is_deeply(
+    [$rand->get(4)], # 4 bytes
+    [0x32, 0x36, 0x6A, 0x19],
+    # we actually fetch qw(32 91 E4 CF D0 36 8E 6A C7 D0 19)
+    "partial (ie, skip numbers too big) single-byte numbers work"
+);
+# F6E567441117ADDB55316C95442220D1

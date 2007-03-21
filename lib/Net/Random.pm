@@ -1,9 +1,9 @@
-# $Id: Random.pm,v 1.3 2007/03/20 16:27:25 drhyde Exp $
+# $Id: Random.pm,v 1.4 2007/03/21 17:18:31 drhyde Exp $
 package Net::Random;
 
 use strict;
 local $^W = 1;
-use vars qw($VERSION);
+use vars qw($VERSION %randomness);
 
 $VERSION = '1.5';
 
@@ -20,7 +20,7 @@ my $ua = LWP::UserAgent->new(
     env_proxy => 1
 );
 
-my %randomness = (
+%randomness = (
     'fourmilab.ch' => { pool => [], retrieve => sub {
         my $response = $ua->get(
 	    'http://www.fourmilab.ch/cgi-bin/uncgi/Hotbits?nbytes=1024&fmt=hex'
@@ -186,10 +186,8 @@ sub get {
 	    @{$randomness{$self->{src}}->{pool}}, 0, $bytes
 	));
 	
-	my $range = $self->{max} + 1 - $self->{min};
-	my $max_multiple = $range * int((2 ** (8 * $bytes)) / $range);
-	push @results, $self->{min} + ($random_number % $range)
-	    unless($random_number > $max_multiple);
+	$random_number += $self->{min};
+	push @results, $random_number unless($random_number > $self->{max});
     }
     @results;
 }
