@@ -1,4 +1,4 @@
-# $Id: param-checking.t,v 1.2 2007/03/16 15:34:35 drhyde Exp $
+# $Id: param-checking.t,v 1.3 2007/03/21 15:56:41 drhyde Exp $
 use strict;
 
 my $warning;
@@ -32,7 +32,7 @@ eval { $r = Net::Random->new(src => 'fourmilab.ch', max => 12, min => 13); };
 ok($@ =~ /Bad parameters to Net::Random->new/, "dies with min > max");
 
 eval { $r = Net::Random->new(src => 'fourmilab.ch', max => 12, min => -1); };
-ok($@ =~ /Bad parameters to Net::Random->new/, "dies with min < 0");
+ok($@ !~ /Bad parameters to Net::Random->new/, "no longer dies with min < 0");
 
 eval { $r = Net::Random->new(src => 'fourmilab.ch', max => 2 ** 32); };
 ok($@ =~ /Bad parameters to Net::Random->new/, "dies with max > 2^32-1");

@@ -1,4 +1,4 @@
-# $Id: fake-tests.t,v 1.4 2007/03/20 16:27:25 drhyde Exp $
+# $Id: fake-tests.t,v 1.5 2007/03/21 15:56:41 drhyde Exp $
 use strict;
 
 my $warning;
@@ -126,7 +126,27 @@ is_deeply(
 
 $rand = Net::Random->new(src => 'fourmilab.ch', min => -100, max => 4294967195);
 is_deeply(
-    [$rand->get(1)], # 4 bytes
-    [hex("0984D65E") -100],
+    [$rand->get(3)], # 12 bytes
+    [map { -100 + hex } qw(0984D65E 9ED62659 A0051298)],
     "complete four byte numbers with offset"
 );
+
+# now eat a load of data to make us empty the pool half-way through the
+# request after this one.  This will leave seven bytes in the pool.
+$rand = Net::Random->new(src => 'fourmilab.ch');
+$rand->get(945);
+
+# recharge the mocked LWP
+open(FILE, 't/fourmilab-data') || die("Can't open t/fourmilab-data\n");
+$warning = ''; @statuses = (1); @content = (join('', <FILE>));
+close(FILE);
+# now fetch four three-byte numbers
+# the pool runs out in the middle of the third one
+$rand = Net::Random->new(src => 'fourmilab.ch', min => -2, max => 16777213);
+is_deeply(
+    [$rand->get(4)], # 12 bytes
+    [map { -2 + hex } qw(6BFF8C 774DE1 203753 0413AF)],
+    "empty the pool half way through a request"
+);
+# there are now 1019 bytes in the pool - the first five from the file have
+# been used
