@@ -3,15 +3,10 @@ they claim to be truly random.
 
 Note that because we are testing random data, the tests of how well-
 distributed the results are may occasionally fail.  If at first you
-don't succeed try, try, try again.  If any individual tests
-*consistently* fail, please let me know, but otherwise I'm only
-interested in patches to the test suite.
+don't succeed try, try, try again.
 
-Because we're testing against data sources out of our control, these may
-sometimes refuse to give us any data.  In that case, the test suite will
-skip some of the live tests.  If, however, they're giving us data, then
-some of the live tests may *fail*.  Testing with random data is HARD.
-Please try again.
+The problem is explained here:
+  http://web.archive.org/web/20011027002011/http://dilbert.com/comics/dilbert/archive/images/dilbert2001182781025.gif
 
 To install, do the usual:
 	perl Makefile.PL
