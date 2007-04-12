@@ -1,3 +1,5 @@
+# $Id: dice,v 1.2 2007/04/12 14:54:18 drhyde Exp $
+
 use strict;
 $^W = 1;
 
