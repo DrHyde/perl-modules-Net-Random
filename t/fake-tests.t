@@ -1,4 +1,4 @@
-# $Id: fake-tests.t,v 1.6 2007/03/21 17:18:31 drhyde Exp $
+# $Id: fake-tests.t,v 1.7 2007/04/12 14:53:28 drhyde Exp $
 use strict;
 
 my $warning;
@@ -11,7 +11,7 @@ BEGIN {
     };
 }
 
-use Test::More tests => 500;
+use Test::More tests => 17;
 use Test::MockObject;
 use Data::Dumper;
 
@@ -50,17 +50,13 @@ $rand = Net::Random->new(src => 'random.org');
 $warning = ''; @statuses = (0); @content = ();
 $rand->get();
 ok($warning =~ /^Net::Random: Error talking to random.org/,
-    "early error talking to random.org detected OK");
-$warning = ''; @statuses = (1, 0); @content = ("25%\n");
-$rand->get();
-ok(!@statuses && $warning =~ /^Net::Random: Error talking to random.org/,
-    "late error talking to random.org buffer detected OK");
+    "error talking to random.org detected OK");
 
-# random.org buffer nearly empty
-$warning = ''; @statuses = (1); @content = ("5%\n");
+# Can talk to random.org, but we're bein' rationed
+$warning = ''; @statuses = (1); @content = ("You have used your quota of random bits for today.  See the quota page for details.");
 $rand->get();
-ok($warning =~ /^Net::Random: random.org/,
-    "random.org buffer nearly empty detected OK");
+ok(!@statuses && $warning =~ /^Net::Random: random.org/,
+    "random.org rationing detected OK");
 
 # shouldn't ever get any more warnings, so make 'em all fatal
 $SIG{__WARN__} = sub {
@@ -69,7 +65,7 @@ $SIG{__WARN__} = sub {
 
 # now grab some real data from random.org
 open(FILE, 't/random.org-data') || die("Can't open t/random.org-data\n");
-$warning = ''; @statuses = (1, 1); @content = ("50%\n", join('', <FILE>));
+$warning = ''; @statuses = (1); @content = (join('', <FILE>));
 close(FILE);
 is_deeply([$rand->get()], [0xe8], "we can get data from random.org");
 is_deeply(
@@ -83,9 +79,10 @@ $rand = Net::Random->new(src => 'fourmilab.ch', min => 300, max => 555);
 open(FILE, 't/fourmilab-data') || die("Can't open t/fourmilab-data\n");
 $warning = ''; @statuses = (1); @content = (join('', <FILE>));
 close(FILE);
+is_deeply([$rand->get(1)], [300 + 0x37], "we can get data from fourmilab.ch");
 is_deeply(
-    [$rand->get(16)], # 16 bytes
-    [map { 300 + hex } qw(37 53 04 13 AF 32 91 E4 CF D0 36 8E 6A C7 D0 19)],
+    [$rand->get(15)], # 15 bytes
+    [map { 300 + hex } qw(53 04 13 AF 32 91 E4 CF D0 36 8E 6A C7 D0 19)],
     "complete one byte numbers (ie working on byte boundaries) with offset"
 );
 

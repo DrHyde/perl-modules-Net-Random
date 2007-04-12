@@ -1,4 +1,4 @@
-# $Id: param-checking.t,v 1.3 2007/03/21 15:56:41 drhyde Exp $
+# $Id: param-checking.t,v 1.4 2007/04/12 14:53:28 drhyde Exp $
 use strict;
 
 my $warning;
@@ -11,10 +11,13 @@ BEGIN {
     };
 }
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 use Net::Random;
 
 my $r;
+
+eval { $r = Net::Random->new(src => 'fourmilab.ch', max => 12, min => -1); };
+ok(!$@, "no longer dies with min < 0");
 
 eval { $r = Net::Random->new(); };
 ok($@ =~ /Bad parameters to Net::Random->new/, "dies with no params");
@@ -31,8 +34,8 @@ ok($@ =~ /Bad parameters to Net::Random->new/, "dies with non-integer min");
 eval { $r = Net::Random->new(src => 'fourmilab.ch', max => 12, min => 13); };
 ok($@ =~ /Bad parameters to Net::Random->new/, "dies with min > max");
 
-eval { $r = Net::Random->new(src => 'fourmilab.ch', max => 12, min => -1); };
-ok($@ !~ /Bad parameters to Net::Random->new/, "no longer dies with min < 0");
-
 eval { $r = Net::Random->new(src => 'fourmilab.ch', max => 2 ** 32); };
 ok($@ =~ /Bad parameters to Net::Random->new/, "dies with max > 2^32-1");
+
+eval { $r = Net::Random->new(src => 'fourmilab.ch', min => -2, max => 2 ** 32); };
+ok($@ =~ /Bad parameters to Net::Random->new/, "dies with min-to-max range > 2^32-1");

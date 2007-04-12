@@ -1,7 +1,9 @@
-1.5     2007-03-XX      Much better testing, using MockObject;
+2.0     2007-04-12      random.org changed their quota system
+                        Much better testing, using MockObject (but still not
+                          complete);
                         min can now be -ve;
-			Algorithm for ensuring output is in correct range
-			  made less insane
+                        Algorithm for ensuring output is in correct range
+                          made less insane
 1.4     2007-02-28      Use Sys::Hostname instead of $Config{aphostname}
                         Skip tests if there's not enough randomness
 1.3     2007-01-20      Now detects when we get kicked out of fourmilab
