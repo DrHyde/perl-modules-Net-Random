@@ -4,7 +4,7 @@ use strict;
 local $^W = 1;
 use vars qw($VERSION %randomness);
 
-$VERSION = '2.0';
+$VERSION = '2.1';
 
 require LWP::UserAgent;
 use Sys::Hostname;
@@ -261,9 +261,17 @@ by using C<$SIG{__WARN__}>.  See C<perldoc perlvar> for details.
 
 I welcome feedback about my code, especially constructive criticism.
 
-=head1 AUTHOR
+=head1 AUTHOR, COPYRIGHT and LICENCE
 
-David Cantrell E<lt>F<david@cantrell.org.uk>E<gt>
+Copyright 2003 - 2012 David Cantrell E<lt>F<david@cantrell.org.uk>E<gt>
+
+This software is free-as-in-speech software, and may be used,
+distributed, and modified under the terms of either the GNU
+General Public Licence version 2 or the Artistic Licence. It's
+up to you which one you use. The full text of the licences can
+be found in the files GPL2.txt and ARTISTIC.txt, respectively.
+
+=head1 THANKS TO
 
 Thanks are also due to the maintainers of the randomness sources.  See
 their web sites for details on how to praise them.
@@ -275,12 +283,9 @@ Suggestions from the following people have been included:
 And patches from:
   Mark Allen, who supplied the code for using SSL
 
-=head1 COPYRIGHT and LICENCE
+=head1 CONSPIRACY
 
-Copyright 2003 - 2012 David Cantrell
-
-This module is free-as-in-speech software, and may be used, distributed,
-and modified under the same terms as Perl itself.
+This module is also free-as-in-mason software.
 
 =cut
 
