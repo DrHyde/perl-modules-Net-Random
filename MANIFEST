@@ -4,7 +4,6 @@ t/live-tests.t
 t/pod.t
 t/pod-coverage.t
 t/fake-tests.t
-CHANGES
 README
 MANIFEST
 Makefile.PL
@@ -14,3 +13,6 @@ t/random.org-checkbuf
 t/random.org-data
 TODO
 example/dice
+ARTISTIC.txt
+CHANGELOG
+GPL2.txt
