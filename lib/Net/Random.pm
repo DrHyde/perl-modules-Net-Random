@@ -22,8 +22,10 @@ my $ua = LWP::UserAgent->new(
 
 %randomness = (
     'fourmilab.ch' => { pool => [], retrieve => sub {
-        my $response = $ua->get(
-	    'http://www.fourmilab.ch/cgi-bin/uncgi/Hotbits?nbytes=1024&fmt=hex'
+        my $ssl = shift;
+        my $response = $ua->get( 
+            ($ssl ? 'https' : 'http') .
+	    '://www.fourmilab.ch/cgi-bin/uncgi/Hotbits?nbytes=1024&fmt=hex'
 	);
 	unless($response->is_success) {
 	    warn "Net::Random: Error talking to fourmilab.ch\n";
@@ -37,18 +39,27 @@ my $ua = LWP::UserAgent->new(
 	map { map { hex } /(..)/g } grep { /^[0-9A-F]+$/ } split(/\s+/, $content);
     } },
     'random.org'   => { pool => [], retrieve => sub {
+        my $ssl = shift;
         my $response = $ua->get(
-	    'http://random.org/cgi-bin/randbyte?nbytes=1024&format=hex'
+            ($ssl ? 'https' : 'http') .
+	    '://random.org/cgi-bin/randbyte?nbytes=1024&format=hex'
 	);
-	if(!$response->is_success) {
+
+    if ( ! $response->is_success ) {
 	    warn "Net::Random: Error talking to random.org\n";
             return ();
-	}
-
+    }
+    
 	$response = $response->content();
+
 	if($response =~ /quota/i) {
 	    warn("Net::Random: random.org ran out of randomness for us\n");
 	    return ();
+	}
+    # Old scripts *always* return 200, so look for 'Error:'
+	elsif($response =~ /Error:/) {
+	    warn "Net::Random: Server error while talking to random.org\n";
+            return ();
 	}
 
 	map { hex } split(/\s+/, $response);
@@ -60,7 +71,7 @@ sub _recharge {
     my $self = shift;
     $randomness{$self->{src}}->{pool} = [
         @{$randomness{$self->{src}}->{pool}},
-        &{$randomness{$self->{src}}->{retrieve}}
+        &{$randomness{$self->{src}}->{retrieve}}($self->{ssl})
     ];
 }
 
@@ -86,8 +97,8 @@ Net::Random - get random data from online sources
 =head1 OVERVIEW
 
 The two sources of randomness above correspond to
-L<http://www.fourmilab.ch/cgi-bin/uncgi/Hotbits?nbytes=1024&fmt=hex> and
-L<http://random.org/cgi-bin/randbyte?nbytes=1024&format=hex>.  We always
+L<https://www.fourmilab.ch/cgi-bin/uncgi/Hotbits?nbytes=1024&fmt=hex> and
+L<https://random.org/cgi-bin/randbyte?nbytes=1024&format=hex>.  We always
 get chunks of 1024 bytes at a time, storing it in a pool which is used up
 as and when needed.  The pool is shared between all objects using the
 same randomness source.  When we run out of randomness we go back to the
@@ -120,8 +131,13 @@ is 2^32-1, the largest value that can be stored in a 32-bit int, or
 0xFFFFFFFF.  The range between min and max can not be greater than
 0xFFFFFFFF either.
 
+You may also set 'ssl' to 0 if you wish to retrieve data using plaintext
+(or outbound SSL is prohibited in your network environment for some reason)
+
 Currently, the only valid values of 'src' are 'fourmilab.ch' and
 'random.org'.
+
+
 
 =cut
 
@@ -130,10 +146,15 @@ sub new {
 
     exists($params{min}) or $params{min} = 0;
     exists($params{max}) or $params{max} = 255;
+    exists($params{ssl}) or $params{ssl} = 1;
+
+    require LWP::Protocol::https or die "LWP::Protocol::https required for SSL connections"
+        if ( $params{ssl} );
+
 
     die("Bad parameters to Net::Random->new():\n".Dumper(\@_)) if(
         (grep {
-            $_ !~ /^(src|min|max)$/
+            $_ !~ /^(src|min|max|ssl)$/
         } keys %params) ||
 	!exists($params{src}) ||
 	$params{src} !~ /^(fourmilab\.ch|random\.org)$/ ||
