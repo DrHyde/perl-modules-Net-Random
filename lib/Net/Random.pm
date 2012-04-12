@@ -145,9 +145,6 @@ sub new {
   exists($params{max}) or $params{max} = 255;
   exists($params{ssl}) or $params{ssl} = 1;
 
-  require LWP::Protocol::https or die "LWP::Protocol::https required for SSL connections"
-    if ( $params{ssl} );
-
   die("Bad parameters to Net::Random->new():\n".Dumper(\@_)) if(
     (grep {
       $_ !~ /^(src|min|max|ssl)$/
@@ -161,6 +158,10 @@ sub new {
     $params{min} >= $params{max} ||
     $params{max} - $params{min} > 0xFFFFFFFF
   );
+
+  if ( $params{ssl} ) {
+    eval "use LWP::Protocol::https; 1;" or die "LWP::Protocol::https required for SSL connections";
+  }
 
   bless({ %params }, $class);
 }

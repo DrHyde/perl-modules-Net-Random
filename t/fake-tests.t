@@ -28,7 +28,7 @@ $httpresponse->mock(content    => sub { return shift(@content); });
 
 use_ok('Net::Random');
 
-my $rand = Net::Random->new(src => 'fourmilab.ch');
+my $rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch');
 
 # Errors talking to fourmilab.ch
 $warning = ''; @statuses = (0); @content = ();
@@ -44,7 +44,7 @@ $rand->get();
 ok($warning =~ /Net::Random: fourmilab.ch/,
     "fourmilab.ch rationing detected OK");
 
-$rand = Net::Random->new(src => 'random.org');
+$rand = Net::Random->new(ssl => 0, src => 'random.org');
 
 # Errors talking to random.org
 $warning = ''; @statuses = (0); @content = ();
@@ -75,7 +75,7 @@ is_deeply(
 );
 
 # from now on we use fourmilab.ch
-$rand = Net::Random->new(src => 'fourmilab.ch', min => 300, max => 555);
+$rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch', min => 300, max => 555);
 open(FILE, 't/fourmilab-data') || die("Can't open t/fourmilab-data\n");
 $warning = ''; @statuses = (1); @content = (join('', <FILE>));
 close(FILE);
@@ -86,42 +86,42 @@ is_deeply(
     "complete one byte numbers (ie working on byte boundaries) with offset"
 );
 
-$rand = Net::Random->new(src => 'fourmilab.ch', max => 65535);
+$rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch', max => 65535);
 is_deeply(
     [$rand->get(5)], # 10 bytes
     [map { hex } qw(F6E5 6744 1117 ADDB 5531)],
     "complete two byte numbers without offset"
 );
 
-$rand = Net::Random->new(src => 'fourmilab.ch', min => 5, max => 65540);
+$rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch', min => 5, max => 65540);
 is_deeply(
     [$rand->get(3)], # 6 bytes
     [map { 5 + hex } qw(6C95 4422 20D1)],
     "complete two byte numbers with offset"
 );
 
-$rand = Net::Random->new(src => 'fourmilab.ch', max => 16777215);
+$rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch', max => 16777215);
 is_deeply(
     [$rand->get(4)], # 12 bytes
     [map { hex } qw(0A9E4A CFE035 6143F0 A8812F)],
     "complete three byte numbers without offset"
 );
 
-$rand = Net::Random->new(src => 'fourmilab.ch', min => -2, max => 16777213);
+$rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch', min => -2, max => 16777213);
 is_deeply(
     [$rand->get(4)], # 12 bytes
     [map { -2 + hex } qw(9B08CF 1434D4 DF9194 911823)],
     "complete three byte numbers with -ve offset"
 );
 
-$rand = Net::Random->new(src => 'fourmilab.ch', min => 0, max => 4294967295);
+$rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch', min => 0, max => 4294967295);
 is_deeply(
     [$rand->get(1)], # 4 bytes
     [hex("F05E6AE3")],
     "complete four byte numbers without offset"
 );
 
-$rand = Net::Random->new(src => 'fourmilab.ch', min => -100, max => 4294967195);
+$rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch', min => -100, max => 4294967195);
 is_deeply(
     [$rand->get(3)], # 12 bytes
     [map { -100 + hex } qw(0984D65E 9ED62659 A0051298)],
@@ -130,7 +130,7 @@ is_deeply(
 
 # now eat a load of data to make us empty the pool half-way through the
 # request after this one.  This will leave seven bytes in the pool.
-$rand = Net::Random->new(src => 'fourmilab.ch');
+$rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch');
 $rand->get(945);
 
 # recharge the mocked LWP
@@ -139,7 +139,7 @@ $warning = ''; @statuses = (1); @content = (join('', <FILE>));
 close(FILE);
 # now fetch four three-byte numbers
 # the pool runs out in the middle of the third one
-$rand = Net::Random->new(src => 'fourmilab.ch', min => -2, max => 16777213);
+$rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch', min => -2, max => 16777213);
 is_deeply(
     [$rand->get(4)], # 12 bytes
     [map { -2 + hex } qw(6BFF8C 774DE1 203753 0413AF)],
@@ -147,7 +147,7 @@ is_deeply(
 );
 # there are now 1019 bytes in the pool - the first five from the file have
 # been used
-$rand = Net::Random->new(src => 'fourmilab.ch', min => 0, max => 127);
+$rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch', min => 0, max => 127);
 is_deeply(
     [$rand->get(4)], # 4 bytes
     [0x32, 0x36, 0x6A, 0x19],
