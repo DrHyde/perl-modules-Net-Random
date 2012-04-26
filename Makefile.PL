@@ -2,6 +2,12 @@
 use ExtUtils::MakeMaker;
 WriteMakefile(
 		NAME	=> 'Net::Random',
+    META_MERGE => {
+        license => 'other',
+        resource => {
+	    repository => 'https://github.com/DrHyde/perl-modules-Net-Random'
+        }
+    },
 		VERSION_FROM => 'lib/Net/Random.pm',
 		PREREQ_PM => {
 		    'LWP::UserAgent'   => 0,
