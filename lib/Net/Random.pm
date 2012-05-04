@@ -4,7 +4,7 @@ use strict;
 local $^W = 1;
 use vars qw($VERSION %randomness);
 
-$VERSION = '2.1';
+$VERSION = '2.2';
 
 require LWP::UserAgent;
 use Sys::Hostname;
@@ -20,6 +20,20 @@ my $ua = LWP::UserAgent->new(
 );
 
 %randomness = (
+  'qrng.anu.edu.au' => { pool => [], retrieve => sub {
+    my $ssl = shift;
+    my $response = $ua->get( 
+      ($ssl ? 'https' : 'http') .
+      '://qrng.anu.edu.au/RawHex.php'
+    );
+    unless($response->is_success) {
+      warn "Net::Random: Error talking to qrng.anu.edu.au\n";
+      return ();
+    }
+    my $content = $response->content();
+    $content =~ s{.*<td>\n(.*)</td>.*}{$1}sg;
+    map { map { hex } /(..)/g } $content;
+  } },
   'fourmilab.ch' => { pool => [], retrieve => sub {
     my $ssl = shift;
     my $response = $ua->get( 
@@ -86,7 +100,11 @@ Net::Random - get random data from online sources
     max => 2000
   );
   @numbers = $rand->get(5);  # get 5 numbers
-  
+
+  my $rand = Net::Random->new( # use qrng.anu.edu.au's randomness source,
+    src => 'qrng.anu.edu.au',   # with no explicit range - so values will
+  );               # be in the default range from 0 to 255
+
   my $rand = Net::Random->new( # use random.org's randomness source,
     src => 'random.org',   # with no explicit range - so values will
   );               # be in the default range from 0 to 255
@@ -95,13 +113,13 @@ Net::Random - get random data from online sources
 
 =head1 OVERVIEW
 
-The two sources of randomness above correspond to
+The three sources of randomness above correspond to
 L<https://www.fourmilab.ch/cgi-bin/uncgi/Hotbits?nbytes=1024&fmt=hex> and
-L<https://random.org/cgi-bin/randbyte?nbytes=1024&format=hex>.  We always
-get chunks of 1024 bytes at a time, storing it in a pool which is used up
-as and when needed.  The pool is shared between all objects using the
-same randomness source.  When we run out of randomness we go back to the
-source for more juicy random goodness.
+L<https://random.org/cgi-bin/randbyte?nbytes=1024&format=hex> and 
+L<https://qrng.anu.edu.au/RawHex.php>.  We always get chunks of 1024 bytes
+at a time, storing it in a pool which is used up as and when needed.  The pool
+is shared between all objects using the same randomness source.  When we run
+out of randomness we go back to the source for more juicy random goodness.
 
 If you have set a http_proxy variable in your environment, this will be
 honoured.
@@ -133,8 +151,8 @@ is 2^32-1, the largest value that can be stored in a 32-bit int, or
 You may also set 'ssl' to 0 if you wish to retrieve data using plaintext
 (or outbound SSL is prohibited in your network environment for some reason)
 
-Currently, the only valid values of 'src' are 'fourmilab.ch' and
-'random.org'.
+Currently, the only valid values of 'src' are 'qrng.anu.edu.au', 'fourmilab.ch'
+and 'random.org'.
 
 =cut
 
@@ -150,7 +168,7 @@ sub new {
       $_ !~ /^(src|min|max|ssl)$/
     } keys %params) ||
     !exists($params{src}) ||
-    $params{src} !~ /^(fourmilab\.ch|random\.org)$/ ||
+    $params{src} !~ /^(fourmilab\.ch|random\.org|qrng\.anu\.edu\.au)$/ ||
     $params{min} !~ /^-?\d+$/ ||
     $params{max} !~ /^-?\d+$/ ||
     # $params{min} < 0 ||

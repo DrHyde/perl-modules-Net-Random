@@ -11,6 +11,7 @@ t/fourmilab-data
 t/fourmilab-outofdata
 t/random.org-checkbuf
 t/random.org-data
+t/qrng-data
 TODO
 example/dice
 ARTISTIC.txt

@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="cache-control" content="no-store" />
+<meta name="Keywords" content="quantum,random,number,generator,ANU,QRNG" />
+<meta name="Description" content="This is the ANU online Quantum Random Number Generator." />
+<title>ANU Quantum Random Number Server</title>
+<script type="text/javascript" src="/java_scripts/reflection.js"></script>
+<script src="/SpryAssets/SpryMenuBar.js" type="text/javascript"></script>
+<link href="/SpryAssets/SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="/rnstyle.css"  type="text/css"/>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>
+</head>
+
+
+<body>
+<div class="container">
+<div class="nav">
+<ul id="Navigation" class="MenuBarHorizontal">
+<li><a href="http://qrng.anu.edu.au/index.php" class="MenuBarItemSubMenu">Welcome</a> </li>
+<li><a href="#" class="MenuBarItemSubmenu">Live Numbers</a>
+<ul>
+<li><a href="#" class="MenuBarItemSubmenu">Live streams</a>
+<ul>
+<li><a href="https://qrng.anu.edu.au/RainHex.php">Hex</a></li>
+<li><a href="https://qrng.anu.edu.au/RainBin.php">Binary</a></li>
+<li><a href="https://qrng.anu.edu.au/RainCol.php">Colours</a></li>
+</ul>
+</li>
+<li><a href="#" class="MenuBarItemSubmenu">Blocks</a>
+<ul>
+<li><a href="https://qrng.anu.edu.au/RawChar.php">Char</a></li>
+<li><a href="https://qrng.anu.edu.au/RawBin.php">Binary</a></li>
+<li><a href="https://qrng.anu.edu.au/RawHex.php">Hex</a></li>
+</ul>
+</li>
+<li><a href="#" class="MenuBarItemSubmenu">Fun Stuffs</a>
+<ul>
+<li><a href="http://qrng.anu.edu.au/Lucky.php">Dice Throw</a></li>
+<li><a href="http://qrng.anu.edu.au/Perm.php">Permutations</a></li>
+<li><a href="http://qrng.anu.edu.au/psychic/psychic.php">Quantum Guess</a></li>
+<li><a href="http://qrng.anu.edu.au/Matrix.php">The Matrix</a></li>
+</ul>
+</li>
+<li><a href="#" class="MenuBarItemSubmenu">Sensing Randomness</a>
+<ul>
+<li><a href="http://qrng.anu.edu.au/bingo/bingo.php">Bingo</a></li>
+<li><a href="http://qrng.anu.edu.au/rnImg.php">B/W Pixels</a></li>
+<li><a href="http://qrng.anu.edu.au/rnScatter.php">Scatter Plot</a></li>
+<li><a href="http://qrng.anu.edu.au/rnLag.php">Lag Plot</a></li>
+<li><a href="http://qrng.anu.edu.au/rnBern.php">Bernoulli Noise</a></li>
+<li><a href="http://qrng.anu.edu.au/rnWN.php">White Noise</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#" class="MenuBarItemSubmenu">Randomness tests</a>
+<ul>
+<li><a href="http://qrng.anu.edu.au/NIST.php">NIST STS</a></li>
+<li><a href="http://qrng.anu.edu.au/Diehard.php">Diehard</a></li>
+<li><a href="http://qrng.anu.edu.au/Dieharder.php">Dieharder</a></li>
+<li><a href="http://qrng.anu.edu.au/Birthday.php">Birthday Collision</a></li>
+<li><a href="http://qrng.anu.edu.au/Dice.php">Dice Probabilities</a></li>
+</ul>
+</li>
+<li><a href="#" class="MenuBarItemSubmenu">About</a>
+<ul>
+<li><a href="http://qrng.anu.edu.au/FAQ.php">FAQ</a></li>
+<li><a href="http://qrng.anu.edu.au/Links.php">Links</a></li>
+</ul>
+</li>
+<li><a href="http://qrng.anu.edu.au/About.php">Contact</a></li>
+</ul>
+</div>
+
+<script type="text/javascript">
+<!--
+ var MenuBar1 = new Spry.Widget.MenuBar("Navigation", {imgDown:"/SpryAssets/SpryMenuBarDownHover.gif", imgRight:"/SpryAssets/SpryMenuBarRightHover.gif"}); 
+ //-->
+ </script>
+
+
+<div class="content">
+
+
+1024 bytes of randomness in hexadecimal form.<br /><br />
+
+
+
+<table class="rng" cellpadding="10"> 
+<tr>
+<td>
+70c53e2122bc75a0b8a224446b94a5e5dab6d1fd1e17095bc2412b3fa5628383d719f61f5bdf67dcda0f4590ffe28db30852ff27eb90c1ce69b93eb0502b2f1ac107d07a79b5fc011111f4a9fd34d57b7ec3b9826445f75b7438b52bb1012b2f818b4d6b7f2a24ac5309cb9b72b103aaa83acb358122be4d638904e43866d8a9c21fbddca67c34dc6f2929d6206b8d70176d7df3976c9518bd252bd9e4770a814e0c0e83393d29fb53aa933007ab1598d389fc0bfdb1070d392d636f3e77e325acdc40e1b1bbe9ded03f147b869f88df3fb7c23318f2bdbf5e2218845e2464753200c0f516e058bc82e4bc0f530fc85f2ccff7d61b57d4022ec595a5f0ddefd45e6457b0cbdfa1290cdd7f24bcebb6be238396e964f639d3406bac47dea67f571ba3853149dbbde67cedb295f6bc21364faff2b85ac706a9b32fba34cf572fa3f6b79b44ea99e6bcb6a1fe0a6c19f355f969a8ecc39bd043f79cb932710a3ab2bd8757631d85a2f03ed56ffada3b91dc298411f057d8abcb9f5ac3683821013dffbb14d0e64b4883eed955beb159d156f7fc3f5e0b48dc23acac81b51b565d2cc30dec3cf52e885223399e1116db9e52700098de7cf08e56ad4ceab0a6e17d54d2b22438106b3c37d2258306b01eac9ac252e90dffb4f4a1f28384cdbb23de152e7ccaa10ac1df7e74c118543bc109d417441a042d8d986f3332a368b9ef3531adccda3051ba527ceaedc1e9cf3b4846b6b76eb3140ca13202090a6d925caebdae27486380f5725e2a80c312e4e139756a73a1a8dba470d747803eff16dd11d99e29b3c78653ff499a40621f9c0bad2ffbd897ae0f26a69fa83bae129736d7e13be6bcd75171f55af4bc2cb81434059a6544064cc190a6bd5dd29171fee4afa120db6b11d90609c8c988fe27955ec7b7d79c6ed1ca03b6f42f153c75ccca33badc30fe7b12faa61a68ac17a298044c2a0922ba1f67519ca0f1d862370f627a33f8f08e41f9e71375af69b870dd8d6f1a0ab364bbf0b3c35056cf85554e67dab3a6239340f59ba41fab33c5f96cbff2be75d89211be9fe75c5640823cea3014b375b051a5e224f223d3007865b2d04fb2e6c8682480e4c0625ad924f94fe6884a842282db3712061549e9e39330afc3de052535ebfa507700b9fc25134a94d5035b0625c89a8d1ec0e9c016a35d583c4704b6edf4a0942e757b24409387e045a9ffb139a2cb76ee751111b577794c187bc96aeb06195c1dbcddb984dccfcb6d2bf6267ae5e8f5627a7863543c52bfb908b76cc5ea9ab2fed61efd5a8de57663488e06d66461edcab9e757019d3b2da8a121744adfd932d429f97c6572ec93fb5239fa2098f3a91de9c7147ac4a42ee1821b3ff246444a2333510cf8e0a395ada68d96a94c6123521a224c5973adcd11b20a0ae744220667353f39277d1cb4351a</td>
+</tr>
+</table>
+
+<br />
+
+    <!-- end .content --></div>
+  <!-- end .container --></div>
+</body>
+</html>
