@@ -312,6 +312,8 @@ And patches from:
 
 =item Steve Wills, who supplied the code for talking to qrng.anu.edu.au;
 
+=back
+
 =head1 CONSPIRACY
 
 This module is also free-as-in-mason software.
