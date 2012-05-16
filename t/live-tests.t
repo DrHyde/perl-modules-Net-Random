@@ -120,28 +120,6 @@ foreach my $ssl (0, 1) {
       # print "[".join(' ', @data)."]\n";
     }
     
-#    $r = Net::Random->new(max => 300, ssl => $ssl, src => 'qrng.anu.edu.au');
-#    $warning = '';
-#    @data = $r->get(1024);
-#    SKIP: {
-#      skip "not enough random bytes", 2 if($warning);
-#      %dist = (); $dist{$_}++ foreach (@data);
-#      ok(!(grep { $_ < 0 || $_ > 300 } @data), "generates bytes in correct range (0-300)");
-#      ok(!(grep { $_ > 15 } values %dist), "distribution looks sane");
-#      # print "[".join(' ', @data)."]\n";
-#    }
-#    
-#    $r = Net::Random->new(max => 70000, ssl => $ssl, src => 'qrng.anu.edu.au');
-#    $warning = '';
-#    @data = $r->get(10240);
-#    SKIP: {
-#      skip "not enough random bytes", 2 if($warning);
-#      %dist = (); $dist{$_}++ foreach (@data);
-#      ok(!(grep { $_ < 0 || $_ > 70000 } @data), "generates bytes in correct range (0-70000)");
-#      ok(!(grep { $_ > 6 } values %dist), "distribution looks sane");
-#      # print "[".join(' ', @data)."]\n";
-#    }
-#    
     $r = Net::Random->new(max => 2 ** 30, ssl => $ssl, src => 'qrng.anu.edu.au');
     $warning = '';
     @data = $r->get(1024);
