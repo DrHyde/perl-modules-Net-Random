@@ -1,3 +1,4 @@
+2.2	2012-05-04	Add support for qrng.anu.edu.au
 2.1     2012-04-12      Added support for https, thanks to Mark Allen
 
 2.0     2007-04-12      random.org changed their quota system

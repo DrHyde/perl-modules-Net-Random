@@ -11,7 +11,7 @@ BEGIN {
     };
 }
 
-use Test::More tests => 17;
+use Test::More tests => 20;
 use Test::MockObject;
 use Data::Dumper;
 
@@ -44,6 +44,14 @@ $rand->get();
 ok($warning =~ /Net::Random: fourmilab.ch/,
     "fourmilab.ch rationing detected OK");
 
+$rand = Net::Random->new(ssl => 0, src => 'qrng.anu.edu.au');
+
+## Errors talking to qrng.anu.edu.au
+$warning = ''; @statuses = (0); @content = ();
+$rand->get();
+ok($warning =~ /^Net::Random: Error talking to qrng.anu.edu.au/,
+    "error talking to qrng.anu.edu.au detected OK");
+
 $rand = Net::Random->new(ssl => 0, src => 'random.org');
 
 # Errors talking to random.org
@@ -71,6 +79,17 @@ is_deeply([$rand->get()], [0xe8], "we can get data from random.org");
 is_deeply(
     [$rand->get(15)],
     [0x1a,0xd3,0xb7,0x01,0x85,0x5c,0x4d,0x19,0x24,0x54,0x15,0x91,0xa8,0x64,0x0d],
+    "numbers between 0 and 255 are kosher"
+);
+
+# now grab some real data from qrng.anu.edu.au
+open(FILE, 't/qrng-data') || die("Can't open t/qrng-data\n");
+$warning = ''; @statuses = (1); @content = (join('', <FILE>));
+close(FILE);
+is_deeply([$rand->get()], [0xe8], "we can get data from qrng.anu.edu.au");
+is_deeply(
+    [$rand->get(15)],
+     [0x0d,0x66,0x16,0xb1,0x29,0x88,0x1c,0x1e,0x1f,0xc0,0x35,0x24,0xc4,0x49,0xb8],
     "numbers between 0 and 255 are kosher"
 );
 
