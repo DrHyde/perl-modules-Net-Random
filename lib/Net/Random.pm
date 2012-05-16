@@ -295,11 +295,22 @@ Thanks are also due to the maintainers of the randomness sources.  See
 their web sites for details on how to praise them.
 
 Suggestions from the following people have been included:
-  Rich Rauenzahn, for using an http_proxy;
-  Wiggins d Anconia suggested I mutter in the docs about security concerns
+
+=over
+
+=item Rich Rauenzahn, for using an http_proxy;
+
+=item Wiggins d Anconia suggested I mutter in the docs about security concerns
+
+=back
 
 And patches from:
-  Mark Allen, who supplied the code for using SSL
+
+=over
+
+=item Mark Allen, who supplied the code for using SSL;
+
+=item Steve Wills, who supplied the code for talking to qrng.anu.edu.au;
 
 =head1 CONSPIRACY
 
