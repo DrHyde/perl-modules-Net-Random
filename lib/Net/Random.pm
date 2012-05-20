@@ -4,10 +4,11 @@ use strict;
 local $^W = 1;
 use vars qw($VERSION %randomness);
 
-$VERSION = '2.2';
+$VERSION = '2.21';
 
 require LWP::UserAgent;
 use Sys::Hostname;
+use JSON ();
 
 use Data::Dumper;
 
@@ -24,15 +25,18 @@ my $ua = LWP::UserAgent->new(
     my $ssl = shift;
     my $response = $ua->get( 
       ($ssl ? 'https' : 'http') .
-      '://qrng.anu.edu.au/RawHex.php'
+      '://qrng.anu.edu.au/API/jsonI.php?length=1024&size=1&type=uint8'
     );
     unless($response->is_success) {
       warn "Net::Random: Error talking to qrng.anu.edu.au\n";
       return ();
     }
-    my $content = $response->content();
-    $content =~ s{.*<td>\n(.*)</td>.*}{$1}sg;
-    map { map { hex } /(..)/g } $content;
+    my $content = JSON::decode_json($response->content());
+    if($content->{success} ne 'true') {
+      warn("Net::Random: qrng.anu.edu.au said 'success: ".$content->{success}."'\n");
+      return();
+    }
+    @{$content->{data}};
   } },
   'fourmilab.ch' => { pool => [], retrieve => sub {
     my $ssl = shift;
@@ -116,7 +120,8 @@ Net::Random - get random data from online sources
 The three sources of randomness above correspond to
 L<https://www.fourmilab.ch/cgi-bin/uncgi/Hotbits?nbytes=1024&fmt=hex>,
 L<https://random.org/cgi-bin/randbyte?nbytes=1024&format=hex> and 
-L<https://qrng.anu.edu.au/RawHex.php>.  We always get chunks of 1024 bytes
+L<https://qrng.anu.edu.au/API/jsonI.php?length=1024&size=1&type=uint8>.
+We always get chunks of 1024 bytes
 at a time, storing it in a pool which is used up as and when needed.  The pool
 is shared between all objects using the same randomness source.  When we run
 out of randomness we go back to the source for more juicy random goodness.
@@ -303,9 +308,18 @@ Suggestions from the following people have been included:
 
 =over
 
-=item Rich Rauenzahn, for using an http_proxy;
+=item Rich Rauenzahn
 
-=item Wiggins d Anconia suggested I mutter in the docs about security concerns
+Suggested I allow use of an http_proxy;
+
+=item Wiggins d Anconia
+
+Suggested I mutter in the docs about security concerns;
+
+=item Syed Assad
+
+Suggested that I use the JSON interface for QRNG instead of scraping 
+the web site;
 
 =back
 
@@ -313,9 +327,13 @@ And patches from:
 
 =over
 
-=item Mark Allen, who supplied the code for using SSL;
+=item Mark Allen
 
-=item Steve Wills, who supplied the code for talking to qrng.anu.edu.au;
+code for using SSL;
+
+=item Steve Wills
+
+code for talking to qrng.anu.edu.au;
 
 =back
 

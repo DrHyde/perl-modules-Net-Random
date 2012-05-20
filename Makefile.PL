@@ -12,6 +12,7 @@ WriteMakefile(
   PREREQ_PM => {
     'LWP::UserAgent'   => 0,
     'Test::More'       => 0.64,
-    'Test::MockObject' => 1.07
+    'Test::MockObject' => 1.07,
+    'JSON'             => 0,
   }
 );
