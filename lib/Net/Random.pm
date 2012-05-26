@@ -4,7 +4,7 @@ use strict;
 local $^W = 1;
 use vars qw($VERSION %randomness);
 
-$VERSION = '2.21';
+$VERSION = '2.22';
 
 require LWP::UserAgent;
 use Sys::Hostname;
@@ -31,8 +31,11 @@ my $ua = LWP::UserAgent->new(
       warn "Net::Random: Error talking to qrng.anu.edu.au\n";
       return ();
     }
-    my $content = JSON::decode_json($response->content());
-    if($content->{success} ne 'true') {
+    my $content = eval { JSON::decode_json($response->content()) };
+    if($@) {
+      warn("Net::Random: qrng.anu.edu.au returned bogus JSON\n");
+      return();
+    } elsif($content->{success} ne 'true') {
       warn("Net::Random: qrng.anu.edu.au said 'success: ".$content->{success}."'\n");
       return();
     }
