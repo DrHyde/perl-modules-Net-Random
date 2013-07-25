@@ -17,3 +17,4 @@ example/dice
 ARTISTIC.txt
 CHANGELOG
 GPL2.txt
+t/context.t

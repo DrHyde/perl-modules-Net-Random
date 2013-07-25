@@ -4,7 +4,7 @@ use strict;
 local $^W = 1;
 use vars qw($VERSION %randomness);
 
-$VERSION = '2.22';
+$VERSION = '2.3';
 
 require LWP::UserAgent;
 use Sys::Hostname;
@@ -198,9 +198,15 @@ Takes a single optional parameter, which must be a positive integer.
 This determines how many random numbers are to be returned and, if not
 specified, defaults to 1.
 
-If it fails to retrieve data, we return undef.  Note that all the sources
+If it fails to retrieve data, we return undef.  Note that random.org and
+fourmilab.ch
 ration their random data.  If you hit your quota, we spit out a warning.
 See the section on ERROR HANDLING below.
+
+Be careful with context. If you call it in list context, you'll always get
+a list of results back, even if you only ask for one. If you call it in
+scalar context you'll either get back a random number if you asked for one
+result, or an array-ref if you asked for multiple results.
 
 =cut
 
@@ -228,7 +234,12 @@ sub get {
     $random_number += $self->{min};
     push @results, $random_number unless($random_number > $self->{max});
   }
-  @results;
+  if(wantarray()) {
+     return @results;
+  } else {
+     if($results == 1) { return $results[0]; }
+      else { return \@results; }
+  }
 }
 
 =back
