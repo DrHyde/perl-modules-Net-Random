@@ -28,9 +28,8 @@ $httpresponse->mock(content    => sub { return shift(@content); });
 
 use_ok('Net::Random');
 
-my $rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch');
-
 # Errors talking to fourmilab.ch
+my $rand = Net::Random->new(ssl => 0, src => 'fourmilab.ch');
 $warning = ''; @statuses = (0); @content = ();
 $rand->get();
 ok($warning =~ /^Net::Random: Error talking to fourmilab.ch/,
@@ -44,17 +43,15 @@ $rand->get();
 ok($warning =~ /Net::Random: fourmilab.ch/,
     "fourmilab.ch rationing detected OK");
 
-$rand = Net::Random->new(ssl => 0, src => 'qrng.anu.edu.au');
-
 ## Errors talking to qrng.anu.edu.au
+$rand = Net::Random->new(ssl => 0, src => 'qrng.anu.edu.au');
 $warning = ''; @statuses = (0); @content = ();
 $rand->get();
 ok($warning =~ /^Net::Random: Error talking to qrng.anu.edu.au/,
     "error talking to qrng.anu.edu.au detected OK");
 
-$rand = Net::Random->new(ssl => 0, src => 'random.org');
-
 # Errors talking to random.org
+$rand = Net::Random->new(ssl => 0, src => 'random.org');
 $warning = ''; @statuses = (0); @content = ();
 $rand->get();
 ok($warning =~ /^Net::Random: Error talking to random.org/,
@@ -72,6 +69,7 @@ $SIG{__WARN__} = sub {
 };
 
 # now grab some real data from random.org
+$rand = Net::Random->new(ssl => 0, src => 'random.org');
 open(FILE, 't/random.org-data') || die("Can't open t/random.org-data\n");
 $warning = ''; @statuses = (1); @content = (join('', <FILE>));
 close(FILE);
@@ -83,13 +81,14 @@ is_deeply(
 );
 
 # now grab some real data from qrng.anu.edu.au
+$rand = Net::Random->new(ssl => 0, src => 'qrng.anu.edu.au');
 open(FILE, 't/qrng-data') || die("Can't open t/qrng-data\n");
 $warning = ''; @statuses = (1); @content = (join('', <FILE>));
 close(FILE);
-is_deeply([$rand->get()], [0xe8], "we can get data from qrng.anu.edu.au");
+is_deeply([$rand->get()], [21], "we can get data from qrng.anu.edu.au");
 is_deeply(
     [$rand->get(15)],
-     [0x0d,0x66,0x16,0xb1,0x29,0x88,0x1c,0x1e,0x1f,0xc0,0x35,0x24,0xc4,0x49,0xb8],
+     [133,89,37,82,76,87,115,61,2,46,126,23,157,35,154],
     "numbers between 0 and 255 are kosher"
 );
 
