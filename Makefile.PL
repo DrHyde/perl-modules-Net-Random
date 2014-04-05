@@ -20,6 +20,6 @@ WriteMakefile(
                                 # spurious warnings
     'Test::More'       => 0.64,
     'Test::MockObject' => 1.07,
-    'JSON'             => 0,
+    'JSON'             => 2.90,
   }
 );

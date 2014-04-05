@@ -1,3 +1,6 @@
+2.31  2014-04-05   Update to make it work with recent JSON.pm. Now
+                     requires JSON.pm 2.90 or higher.
+
 2.3   2013-07-25   Fix nasty context bug. scalar($rand->get(1)) would
                      always give you 1 (the number of elements in the
                      list returned) instead of a useful number.
