@@ -5,12 +5,8 @@ WriteMakefile(
   META_MERGE => {
     license => 'other',
     resources => {
-      repository => {
-        web => 'https://github.com/DrHyde/perl-modules-Net-Random'
-      },
-      bugtracker => {
-        web => 'https://github.com/DrHyde/perl-modules-Net-Random/issues/new'
-      },
+      repository => 'https://github.com/DrHyde/perl-modules-Net-Random',
+      bugtracker => 'https://github.com/DrHyde/perl-modules-Net-Random/issues'
     },
   },
   VERSION_FROM => 'lib/Net/Random.pm',
