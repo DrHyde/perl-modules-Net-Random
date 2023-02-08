@@ -15,6 +15,7 @@ jobs:
       run: |
         cpanm ExtUtils::MakeMaker Test::Pod Test::Pod::Coverage || cat $HOME/.cpanm/work/*/build.log
         echo $PERLCPANM_HOME
+        cpanm --notest Test::MockObject
         cpanm --installdeps . || cat C:/HOSTED~1/windows/STRAWB~1/*/x64/data/.cpanm/work/*/build.log
     - name: Run Tests
       run: |
