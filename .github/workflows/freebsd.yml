@@ -38,6 +38,7 @@ jobs:
             cd dist-for-test/* &&
             sudo pkg install -y perl5 &&
             cpan App::cpanminus &&
+            /home/runner/perl5/bin/cpanm --notest IO::Socket::SSL &&
             /home/runner/perl5/bin/cpanm --installdeps . &&
             /home/runner/perl5/bin/cpanm -v .
 
